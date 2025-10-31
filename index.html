@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVerify - Análise de Crédito Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="attribute_mapping.js" defer></script>
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo-group">
+                <span class="logo-icon">IV</span>
+                <div class="logo-text">
+                    <h1 class="logo">IVerify</h1>
+                    <p class="subtitle">Análise de Crédito Inteligente</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <button id="themeToggle" class="theme-toggle" aria-label="Alternar tema"><i class="fas fa-sun"></i></button>
+                <a href="https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data" target="_blank" class="btn-dataset"><i class="fas fa-database"></i> Dataset</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="about" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Análise de Risco de Crédito com IA</h2>
+                    <p class="tagline">Utilize machine learning para tomar decisões de crédito rápidas, precisas e seguras. Baseado no dataset Statlog German Credit com 1.000 registros históricos e 20 atributos financeiros e pessoais.</p>
+                    
+                    <div class="kpis-summary">
+                        <div class="kpi-card">
+                            <i class="fas fa-database"></i>
+                            <span class="kpi-item">1.000</span>
+                            <span class="kpi-label">Registros</span>
+                            <span class="kpi-sublabel">Dados históricos</span>
+                        </div>
+                        <div class="kpi-card">
+                            <i class="fas fa-list-ol"></i>
+                            <span class="kpi-item">20</span>
+                            <span class="kpi-label">Atributos</span>
+                            <span class="kpi-sublabel">Variáveis analisadas</span>
+                        </div>
+                        <div class="kpi-card">
+                            <i class="fas fa-brain"></i>
+                            <span class="kpi-item">XGBoost</span>
+                            <span class="kpi-label">Modelo</span>
+                            <span class="kpi-sublabel">Machine Learning</span>
+                        </div>
+                        <div class="kpi-card">
+                            <i class="fas fa-percent"></i>
+                            <span class="kpi-item">~75%</span>
+                            <span class="kpi-label">Acurácia</span>
+                            <span class="kpi-sublabel">Taxa de acerto</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="config" class="config-section">
+            <div class="container">
+                <div class="card config-card">
+                    <h4><i class="fas fa-cogs"></i> Configuração da API</h4>
+                    <span id="apiStatus" class="status-badge connected"><i class="fas fa-check-circle"></i> Conectado</span>
+                    <div class="config-grid">
+                        <div class="form-group">
+                            <label for="backendUrl">Base URL da API</label>
+                            <input type="text" id="backendUrl" value="https://viniciuskhan-backend-iverify.hf.space" placeholder="https://seu-backend.com/api" required>
+                            <span class="help-text">Deixe em branco para usar a mesma origem</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="threshold">Threshold (0-1)</label>
+                            <input type="number" id="threshold" value="0.5" min="0" max="1" step="0.01" required>
+                            <span class="help-text">Limite de aprovação</span>
+                        </div>
+                        <div class="config-actions">
+                            <button type="button" class="btn btn-secondary" id="btnTestConnection"><i class="fas fa-sync-alt"></i> Testar Conexão</button>
+                            <span class="version-text">v1.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="analysis" class="analysis-section">
+            <div class="container">
+                <div class="card">
+                    <h4><i class="fas fa-user-check"></i> Dados do Proponente</h4>
+                    
+                    <form id="creditForm" class="credit-form">
+                        <!-- Campos do formulário serão injetados por JS -->
+                        
+                        <!-- Grupo 1: Status Financeiro -->
+                        <div class="form-group-section">
+                            <h5>Status Financeiro</h5>
+                            <div class="form-group-grid">
+                                <div class="form-group"><label for="checking_status">Status Conta Corrente:</label><select id="checking_status" name="checking_status" required></select></div>
+                                <div class="form-group"><label for="credit_amount">Valor do Crédito (DM):</label><input type="number" id="credit_amount" name="credit_amount" required></div>
+                                <div class="form-group"><label for="savings_account">Conta Poupança/Títulos:</label><select id="savings_account" name="savings_account" required></select></div>
+                                <div class="form-group"><label for="installment_rate">Taxa de Prestação (% Renda):</label><input type="number" id="installment_rate" name="installment_rate" min="1" max="4" required></div>
+                            </div>
+                        </div>
+
+                        <!-- Grupo 2: Histórico e Duração -->
+                        <div class="form-group-section">
+                            <h5>Histórico e Duração</h5>
+                            <div class="form-group-grid">
+                                <div class="form-group"><label for="credit_duration_months">Duração do Crédito (meses):</label><input type="number" id="credit_duration_months" name="credit_duration_months" required></div>
+                                <div class="form-group"><label for="credit_history">Histórico de Crédito:</label><select id="credit_history" name="credit_history" required></select></div>
+                                <div class="form-group"><label for="existing_credits">Créditos Existentes:</label><input type="number" id="existing_credits" name="existing_credits" min="1" max="4" required></div>
+                                <div class="form-group"><label for="other_installment_plans">Outros Planos de Prestação:</label><select id="other_installment_plans" name="other_installment_plans" required></select></div>
+                            </div>
+                        </div>
+
+                        <!-- Grupo 3: Demográficos e Emprego -->
+                        <div class="form-group-section">
+                            <h5>Demográficos e Emprego</h5>
+                            <div class="form-group-grid">
+                                <div class="form-group"><label for="age_years">Idade (anos):</label><input type="number" id="age_years" name="age_years" required></div>
+                                <div class="form-group"><label for="personal_status_sex">Status Pessoal e Sexo:</label><select id="personal_status_sex" name="personal_status_sex" required></select></div>
+                                <div class="form-group"><label for="dependents">Dependentes:</label><input type="number" id="dependents" name="dependents" min="1" max="2" required></div>
+                                <div class="form-group"><label for="employment_duration">Empregado Desde:</label><select id="employment_duration" name="employment_duration" required></select></div>
+                                <div class="form-group"><label for="job_type">Tipo de Emprego:</label><select id="job_type" name="job_type" required></select></div>
+                                <div class="form-group"><label for="foreign_worker">Trabalhador Estrangeiro:</label><select id="foreign_worker" name="foreign_worker" required></select></div>
+                            </div>
+                        </div>
+
+                        <!-- Grupo 4: Propósito e Outros -->
+                        <div class="form-group-section">
+                            <h5>Propósito e Outros</h5>
+                            <div class="form-group-grid">
+                                <div class="form-group"><label for="loan_purpose">Propósito do Empréstimo:</label><select id="loan_purpose" name="loan_purpose" required></select></div>
+                                <div class="form-group"><label for="housing_type">Tipo de Moradia:</label><select id="housing_type" name="housing_type" required></select></div>
+                                <div class="form-group"><label for="property_type">Tipo de Propriedade:</label><select id="property_type" name="property_type" required></select></div>
+                                <div class="form-group"><label for="guarantors">Outros Devedores / Fiadores:</label><select id="guarantors" name="guarantors" required></select></div>
+                                <div class="form-group"><label for="residence_since">Residente Desde (anos):</label><input type="number" id="residence_since" name="residence_since" min="1" max="4" required></div>
+                                <div class="form-group"><label for="telephone">Telefone:</label><select id="telephone" name="telephone" required></select></div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="btnLoadExample"><i class="fas fa-magic"></i> Carregar Exemplo</button>
+                            <button type="button" class="btn btn-secondary" id="btnClearForm"><i class="fas fa-trash-alt"></i> Limpar</button>
+                            <button type="submit" class="btn btn-primary" id="btnAnalyze"><i class="fas fa-check-circle"></i> Analisar Crédito</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="results" class="results-section hidden">
+            <div class="container">
+                <div class="card">
+                    <h4><i class="fas fa-chart-bar"></i> Resultado da Análise</h4>
+                    <div id="resultDisplay" class="result-display">
+                        <!-- O resultado será injetado aqui -->
+                    </div>
+                    <div class="details-toggle">
+                        <button id="toggleDetails" class="btn btn-link"><i class="fas fa-code"></i> Ver Detalhes Técnicos</button>
+                    </div>
+                    <div id="technicalDetails" class="technical-details hidden">
+                        <h5>Dados Técnicos (API)</h5>
+                        <pre id="rawJson" class="code-block"></pre>
+                        <button class="btn btn-link" id="copyJson"><i class="fas fa-copy"></i> Copiar JSON</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Made with <i class="fas fa-heart"></i> for IVerify. Baseado no German Credit Data (UCI ML Repository).</p>
+        </div>
+    </footer>
+</body>
+</html>
