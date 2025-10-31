@@ -1,1 +1,32 @@
-node_modules/\n.DS_Store\n/data/
+# SO / Editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node / Web
+node_modules/
+dist/
+build/
+
+# Dados e artefatos
+data/
+models/
+artifacts/
+*.joblib
+*.pkl
+
+# Submódulo acidental
+backend-IVerify/
+
+backend-IVerify/
